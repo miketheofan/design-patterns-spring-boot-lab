@@ -1,5 +1,7 @@
 package com.payment_processing_system.strategies;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Component;
 
 import com.payment_processing_system.domains.PaymentRequest;
@@ -15,9 +17,8 @@ public class BankTransferPaymentStrategy implements PaymentStrategy {
     }
 
     @Override
-    public PaymentResponse calculateFee() {
+    public BigDecimal calculateFee(BigDecimal amount) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'calculateFee'");
     }
-
 }

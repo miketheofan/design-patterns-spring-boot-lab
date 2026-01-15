@@ -5,11 +5,13 @@ import java.util.UUID;
 
 import com.payment_processing_system.exceptions.PaymentProcessingException;
 import com.payment_processing_system.exceptions.PaymentValidationException;
+import org.springframework.stereotype.Component;
 
 /**
  * Shared validation utilities for payment strategies.
  * Provides common validation logic to avoid code duplication.
  */
+@Component
 public class PaymentValidationHelper {
 
     private final static String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";

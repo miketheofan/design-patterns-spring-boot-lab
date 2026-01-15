@@ -1,0 +1,30 @@
+meta {
+  name: /api/payments/process
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/payments/process
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "amount": 0.50,
+    "currency": "EUR",
+    "method": "CREDIT_CARD",
+    "paymentDetails": {
+      "cardNumber": "4111111111111111",
+      "expiryDate": "12/2026",
+      "cvv": "123",
+      "cardHolderName": "John Doe"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
