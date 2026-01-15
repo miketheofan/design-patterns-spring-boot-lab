@@ -7,9 +7,6 @@ import lombok.Getter;
  * Represents supported currencies in the payment processing system.
  * Each currency includes a display name and symbol for formatting.
  * 
- * @author Payment Processing System
- * @version 1.0
- * @since 1.0
  */
 @AllArgsConstructor
 @Getter

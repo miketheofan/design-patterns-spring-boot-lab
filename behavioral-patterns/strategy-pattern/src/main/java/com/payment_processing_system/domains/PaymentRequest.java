@@ -1,5 +1,6 @@
 package com.payment_processing_system.domains;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.payment_processing_system.enums.CurrenciesEnum;
@@ -18,7 +19,7 @@ public class PaymentRequest {
 	 */
 	@NotNull(message = "Amount is required")
 	@Positive(message = "Amount must be greater than zero")
-	private Double amount;
+	private BigDecimal amount;
 
 	/**
 	 * The currency in which the payment is made

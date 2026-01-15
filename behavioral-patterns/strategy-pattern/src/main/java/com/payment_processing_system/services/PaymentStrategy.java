@@ -1,5 +1,7 @@
 package com.payment_processing_system.services;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Service;
 
 import com.payment_processing_system.domains.PaymentRequest;
@@ -13,5 +15,6 @@ public interface PaymentStrategy {
      * @return
      */
     public abstract PaymentResponse process(PaymentRequest request);
-    public abstract PaymentResponse calculateFee();
+
+    public abstract BigDecimal calculateFee(BigDecimal amount);
 }

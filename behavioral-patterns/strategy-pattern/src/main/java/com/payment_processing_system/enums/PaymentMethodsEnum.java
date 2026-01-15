@@ -10,11 +10,7 @@ import lombok.Getter;
  * <p>This enum serves as an identifier for payment methods and is used
  * in conjunction with the Strategy pattern to select the appropriate
  * payment processing implementation.</p>
- * 
- * @see com.payment_processing_system.strategy.PaymentStrategy
- * @author Payment Processing System
- * @version 1.0
- * @since 1.0
+ *
  */
 @AllArgsConstructor
 @Getter
