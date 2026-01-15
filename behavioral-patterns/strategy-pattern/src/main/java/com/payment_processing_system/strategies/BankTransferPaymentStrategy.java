@@ -1,4 +1,4 @@
-package com.payment_processing_system.services;
+package com.payment_processing_system.strategies;
 
 import org.springframework.stereotype.Component;
 

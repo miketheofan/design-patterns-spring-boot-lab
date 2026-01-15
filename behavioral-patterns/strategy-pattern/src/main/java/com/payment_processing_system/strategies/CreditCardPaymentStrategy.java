@@ -1,4 +1,4 @@
-package com.payment_processing_system.services;
+package com.payment_processing_system.strategies;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -108,10 +108,6 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
 
     /**
      * Extracts and validates credit card details from payment details map.
-     * 
-     * @param details Raw payment details map
-     * @return Validated credit card details
-     * @throws PaymentValidationException if any validation fails
      */
     private CreditCardDetails extractAndValidateDetails(Map<String, Object> details) {
         String cardNumber = validator.getSpecificKey(details, CARD_NUMBER_KEY);
@@ -129,9 +125,6 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
 
     /**
      * Validates card number using Luhn algorithm.
-     * 
-     * @param cardNumber The card number to validate
-     * @throws PaymentValidationException if card number is invalid
      */
     private void validateCardNumber(String cardNumber) {
         // Remove spaces and dashes
@@ -156,9 +149,6 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
      * 2. If doubled digit > 9, subtract 9
      * 3. Sum all digits
      * 4. Valid if sum % 10 == 0
-     * 
-     * @param cardNumber Clean card number (digits only)
-     * @return true if valid, false otherwise
      */
     private boolean passesLuhnCheck(String cardNumber) {
         int sum = 0;
@@ -184,9 +174,6 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
 
     /**
      * Validates expiry date format (MM/yyyy) and ensures not expired.
-     * 
-     * @param expiryDate Expiry date string in MM/yyyy format
-     * @throws PaymentValidationException if format invalid or card expired
      */
     private void validateExpiryDate(String expiryDate) {
         // Validate format (MM/yyyy)
