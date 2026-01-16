@@ -6,9 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 
@@ -39,6 +37,23 @@ public class CreditCardPaymentStrategyTest {
     @InjectMocks
     private CreditCardPaymentStrategy strategy;
 
+    /** Sets up validator mock to return valid credit card details. */
+    private void mockValidCardDetails() {
+        when(validator.getSpecificKey(any(), anyString()))
+            .thenAnswer(invocation -> {
+                String key = invocation.getArgument(1);
+                return switch (key) {
+                    case "cardNumber" -> "4532015112830366";
+                    case "cvv" -> "123";
+                    case "expiryDate" -> "12/2026";
+                    case "cardHolderName" -> "John Doe";
+                    default -> "validValue";
+                };
+            });
+        doNothing().when(validator).validatePattern(anyString(), anyString(), anyString());
+        lenient().doNothing().when(validator).simulateRandomFailure(anyDouble(), anyString());
+    }
+
     @Nested
     @DisplayName("process()")
     class ProcessTests {
@@ -50,9 +65,7 @@ public class CreditCardPaymentStrategyTest {
             PaymentRequest request = PaymentTestHelper.createValidCreditCardRequest();
             String expectedTransactionId = "TXN-123456";
 
-            when(validator.getSpecificKey(any(), anyString())).thenReturn("validValue");
-            doNothing().when(validator).validatePattern(anyString(), anyString(), anyString());
-            doNothing().when(validator).simulateRandomFailure(anyDouble(), anyString());
+            mockValidCardDetails();
             when(validator.generateTransactionId()).thenReturn(expectedTransactionId);
 
             // Act
@@ -74,8 +87,7 @@ public class CreditCardPaymentStrategyTest {
             BigDecimal amount = new BigDecimal("100.00");
             PaymentRequest request = PaymentTestHelper.createRequestWithAmount(amount);
 
-            when(validator.getSpecificKey(any(), anyString())).thenReturn("02/2026");
-            doNothing().when(validator).validatePattern(anyString() ,anyString(), anyString());
+            mockValidCardDetails();
             when(validator.generateTransactionId()).thenReturn("TXN-123");
 
             // Act
@@ -131,9 +143,8 @@ public class CreditCardPaymentStrategyTest {
         void process_processingFailure_throwsProcessingException() {
             // Arrange
             PaymentRequest request = PaymentTestHelper.createValidCreditCardRequest();
-            
-            when(validator.getSpecificKey(any(), anyString())).thenReturn("validValue");
-            doNothing().when(validator).validatePattern(anyString(), anyString(), anyString());
+
+            mockValidCardDetails();
             doThrow(new PaymentProcessingException("Insufficient funds"))
                 .when(validator).simulateRandomFailure(anyDouble(), anyString());
 

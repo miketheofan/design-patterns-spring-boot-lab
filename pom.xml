@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.design-patterns-lab</groupId>
+    <artifactId>design-patterns-spring-boot-lab</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Design Patterns Spring Boot Lab</name>
+    <description>A collection of design pattern implementations in Spring Boot</description>
+
+    <modules>
+        <module>behavioral-patterns/strategy-pattern</module>
+        <!-- Add more modules as you create them -->
+        <!-- <module>creational-patterns/factory-pattern</module> -->
+        <!-- <module>structural-patterns/adapter-pattern</module> -->
+    </modules>
+</project>
