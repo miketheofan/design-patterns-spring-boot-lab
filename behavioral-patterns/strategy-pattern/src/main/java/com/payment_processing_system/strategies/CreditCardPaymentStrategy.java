@@ -92,31 +92,18 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
     }
 
     /**
-     * Internal data class for validated credit card details.
-     * Only used within this strategy - not exposed externally.
-     */
-    private record CreditCardDetails(
-        String cardNumber,
-        String cvv,
-        String expiryDate,
-        String cardholderName
-    ) {}
-
-    /**
      * Extracts and validates credit card details from payment details map.
      */
-    private CreditCardDetails extractAndValidateDetails(Map<String, Object> details) {
+    private void extractAndValidateDetails(Map<String, Object> details) {
         String cardNumber = validator.getSpecificKey(details, CARD_NUMBER_KEY);
         String cvv = validator.getSpecificKey(details, CVV_KEY);
         String expiryDate = validator.getSpecificKey(details, EXPIRY_DATE_KEY);
-        String cardholderName = validator.getSpecificKey(details, CARDHOLDER_NAME_KEY);
+//        String cardholderName = validator.getSpecificKey(details, CARDHOLDER_NAME_KEY);
 
         // Validate
         validator.validatePattern(cvv, CVV_NUMBER_PATTERN, CVV_NUMBER_WRONG_PATTERN_MSG);
         validateExpiryDate(expiryDate);
         validateCardNumber(cardNumber);
-
-        return new CreditCardDetails(cardNumber, cvv, expiryDate, cardholderName);
     }
 
     /**

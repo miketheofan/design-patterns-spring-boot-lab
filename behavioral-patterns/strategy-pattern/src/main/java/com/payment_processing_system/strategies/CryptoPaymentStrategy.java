@@ -24,7 +24,7 @@ import com.payment_processing_system.domains.PaymentResponse;
  * Validation rules:
  * - Valid wallet address format (Bitcoin or Ethereum)
  * - Network specified (BITCOIN/ETHEREUM)
- * - Amount meets minumum threshold (€10)
+ * - Amount meets minimum threshold (€10)
  *
  * Fee: 1.0% + network gas fees per transaction
  */
@@ -45,11 +45,11 @@ public class CryptoPaymentStrategy implements PaymentStrategy {
     private static final String ETHEREUM_ADDRESS_ERROR_MSG = "Invalid Ethereum address format";
     private static final String MINIMUM_AMOUNT_ERROR_MSG = "Cryptocurrency payment minimum is €10.00";
     private static final String INVALID_NETWORK_ERROR_MSG = "Network type is not supported";
-    private static final String HIGH_NETWORK_CONG_ERR_MSG = "High network congestion - try again";
+    private static final String HIGH_NETWORK_CONG_ERROR_MSG = "High network congestion - try again";
 
     @Override
     public PaymentResponse process(PaymentRequest request) {
-        log.info("Processing crypto payment: amount={}", request.getAmount());
+        log.info("Processing Crypto payment: amount={}", request.getAmount());
 
         Map<String, Object> details = request.getPaymentDetails();
 
@@ -63,7 +63,7 @@ public class CryptoPaymentStrategy implements PaymentStrategy {
         BigDecimal fee = calculateFee(request.getAmount());
 
         log.info("Crypto payment completed successfully");
-        return buildPaymentRespone(request, fee);
+        return buildPaymentResponse(request, fee);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class CryptoPaymentStrategy implements PaymentStrategy {
     protected void checkNetworkCongestion() {
         double random = Math.random();
         if (random < 0.15) {
-            validator.simulateRandomFailure(0.3, HIGH_NETWORK_CONG_ERR_MSG);
+            validator.simulateRandomFailure(0.3, HIGH_NETWORK_CONG_ERROR_MSG);
         }
     }
 
@@ -129,7 +129,7 @@ public class CryptoPaymentStrategy implements PaymentStrategy {
             throw new PaymentValidationException(INVALID_NETWORK_ERROR_MSG);
         }
 
-        // Validate walled address based on network
+        // Validate wallet address based on network
         validateWalletAddress(walletAddress, network);
     }
 
@@ -148,7 +148,7 @@ public class CryptoPaymentStrategy implements PaymentStrategy {
         }
     }
 
-    private PaymentResponse buildPaymentRespone(PaymentRequest request, BigDecimal fee) {
+    private PaymentResponse buildPaymentResponse(PaymentRequest request, BigDecimal fee) {
         return PaymentResponse.builder()
                 .status(TransactionStatus.COMPLETED)
                 .transactionId(validator.generateTransactionId())

@@ -113,4 +113,49 @@ public class PaymentTestHelper {
                 new BigDecimal("50.00")
         );
     }
+
+    // PayPal payments
+    public static PaymentRequest createValidPayPalRequest() {
+        return createPayPalRequest(
+                "user@gmail.com",
+                "Bearer abc123def4",
+                new BigDecimal("100.00")
+        );
+    }
+
+    // Generic PayPal request
+    public static PaymentRequest createPayPalRequest(
+            String email,
+            String token,
+            BigDecimal amount
+    ) {
+        Map<String, Object> details = new HashMap<>();
+        details.put("email", email);
+        details.put("token", token);
+
+        return PaymentRequest.builder()
+                .amount(amount)
+                .currency(CurrenciesEnum.EUR)
+                .method(PaymentMethodsEnum.PAYPAL)
+                .paymentDetails(details)
+                .build();
+    }
+
+    // Invalid email format
+    public static PaymentRequest createInvalidEmailRequest() {
+        return createPayPalRequest(
+                "invalid-email",
+                "Bearer abc123def4",
+                new BigDecimal("100.00")
+        );
+    }
+
+    // Invalid token format
+    public static PaymentRequest createInvalidTokenRequest() {
+        return createPayPalRequest(
+                "user@gmail.com",
+                "InvalidToken",
+                new BigDecimal("100.00")
+        );
+    }
 }

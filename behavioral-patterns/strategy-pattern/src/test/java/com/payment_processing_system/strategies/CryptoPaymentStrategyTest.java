@@ -88,7 +88,7 @@ public class CryptoPaymentStrategyTest {
         @DisplayName("should successfully process valid Ethereum payment")
         void process_validEthereumRequest_returnsCompletedResponse() {
             // Valid Ethereum address, network=ETHEREUM, amount >= €10
-            PaymentRequest request = PaymentTestHelper.createValidBitcoinRequest();
+            PaymentRequest request = PaymentTestHelper.createValidEthereumRequest();
 
             mockValidCryptoDetails(CryptoNetworkEnum.ETHEREUM.name());
             PaymentResponse response = strategy.process(request);
@@ -114,7 +114,7 @@ public class CryptoPaymentStrategyTest {
             doReturn(mockGasFee).when(spyStrategy).calculateNetworkGasFee();
 
             // Act
-            mockValidCryptoDetails(CryptoNetworkEnum.BITCOIN.name()); // Also fixed to match request
+            mockValidCryptoDetails(CryptoNetworkEnum.BITCOIN.name());
             PaymentResponse response = spyStrategy.process(request);
 
             // Assert
