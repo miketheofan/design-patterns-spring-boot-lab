@@ -158,4 +158,54 @@ public class PaymentTestHelper {
                 new BigDecimal("100.00")
         );
     }
+
+    // Bank Transfer payments
+    public static PaymentRequest createValidBankTransferRequest() {
+        return createBankTransferRequest(
+                "GR1234567890",
+                "12345",
+                "John Doe",
+                new BigDecimal("500.00")
+        );
+    }
+
+    // Generic Bank Transfer request
+    public static PaymentRequest createBankTransferRequest(
+            String iban,
+            String bicCode,
+            String cardHolderName,
+            BigDecimal amount
+    ) {
+        Map<String, Object> details = new HashMap<>();
+        details.put("iban", iban);
+        details.put("bic_code", bicCode);
+        details.put("card_holder_name", cardHolderName);
+
+        return PaymentRequest.builder()
+                .amount(amount)
+                .currency(CurrenciesEnum.EUR)
+                .method(PaymentMethodsEnum.BANK_TRANSFER)
+                .paymentDetails(details)
+                .build();
+    }
+
+    // Invalid IBAN format
+    public static PaymentRequest createInvalidIbanRequest() {
+        return createBankTransferRequest(
+                "INVALID123",
+                "12345",
+                "John Doe",
+                new BigDecimal("500.00")
+        );
+    }
+
+    // Invalid BIC code format
+    public static PaymentRequest createInvalidBicCodeRequest() {
+        return createBankTransferRequest(
+                "GR1234567890",
+                "ABC",
+                "John Doe",
+                new BigDecimal("500.00")
+        );
+    }
 }

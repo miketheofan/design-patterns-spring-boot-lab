@@ -1,7 +1,7 @@
 meta {
-  name: CreditCard payment
+  name: BankTransfer payment
   type: http
-  seq: 1
+  seq: 6
 }
 
 post {
@@ -12,14 +12,13 @@ post {
 
 body:json {
   {
-    "amount": 100.00,
+    "amount": 500.00,
     "currency": "EUR",
-    "method": "CREDIT_CARD",
+    "method": "BANK_TRANSFER",
     "paymentDetails": {
-      "card_number": "4532015112830366",
-      "cvv": "123",
-      "expiry_date": "12/2026",
-      "card_holder_name": "John Doe"
+      "iban": "GR1",
+      "bic_code": "12345",
+      "card_holder_name": "m.t"
     }
   }
 }

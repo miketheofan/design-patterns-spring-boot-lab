@@ -37,10 +37,10 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CreditCardPaymentStrategy implements PaymentStrategy {
 
-    private static final String CARD_NUMBER_KEY = "cardNumber";
+    private static final String CARD_NUMBER_KEY = "card_number";
     private static final String CVV_KEY = "cvv";
-    private static final String EXPIRY_DATE_KEY = "expiryDate" ;
-    private static final String CARDHOLDER_NAME_KEY = "cardHolderName";
+    private static final String EXPIRY_DATE_KEY = "expiry_date" ;
+    private static final String CARDHOLDER_NAME_KEY = "card_holder_name";
 
     private static final String CVV_NUMBER_PATTERN = "\\d{3,4}";
     private static final String CVV_NUMBER_WRONG_PATTERN_MSG = "CVV must be 3-4 digits";
@@ -98,7 +98,7 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
         String cardNumber = validator.getSpecificKey(details, CARD_NUMBER_KEY);
         String cvv = validator.getSpecificKey(details, CVV_KEY);
         String expiryDate = validator.getSpecificKey(details, EXPIRY_DATE_KEY);
-//        String cardholderName = validator.getSpecificKey(details, CARDHOLDER_NAME_KEY);
+        String cardholderName = validator.getSpecificKey(details, CARDHOLDER_NAME_KEY);
 
         // Validate
         validator.validatePattern(cvv, CVV_NUMBER_PATTERN, CVV_NUMBER_WRONG_PATTERN_MSG);
