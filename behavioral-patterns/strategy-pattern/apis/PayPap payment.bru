@@ -1,0 +1,28 @@
+meta {
+  name: PayPap payment
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/payments/process
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "amount": 100.00,
+    "currency": "EUR",
+    "method": "PAYPAL",
+    "paymentDetails": {
+      "email": "test@gmail.com",
+      "token": "Bearer 1234567890"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

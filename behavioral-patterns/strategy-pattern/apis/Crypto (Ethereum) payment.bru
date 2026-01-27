@@ -1,0 +1,28 @@
+meta {
+  name: Crypto (Ethereum) payment
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8080/api/payments/process
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "amount": 100.00,
+    "currency": "EUR",
+    "method": "CRYPTO",
+    "paymentDetails": {
+      "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0ebEb",
+      "network": "ETHEREUM"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

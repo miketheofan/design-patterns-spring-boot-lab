@@ -1,0 +1,28 @@
+meta {
+  name: Crypto (Bitcoin) payment
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/payments/process
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "amount": 50.00,
+    "currency": "EUR",
+    "method": "CRYPTO",
+    "paymentDetails": {
+      "walletAddress": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+      "network": "BITCOIN"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
