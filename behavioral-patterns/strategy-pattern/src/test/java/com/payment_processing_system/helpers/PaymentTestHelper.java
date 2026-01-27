@@ -22,10 +22,11 @@ public class PaymentTestHelper {
     /** Creates a credit card payment request with custom details */
     public static PaymentRequest createCreditCardRequest(
         String cardNumber, String cvv, String expiryDate, String cardholderName) {
-            PaymentRequest request = new PaymentRequest();
-            request.setAmount(new BigDecimal("100.00"));
-            request.setCurrency(CurrenciesEnum.EUR);
-            request.setMethod(PaymentMethodsEnum.CREDIT_CARD);
+            PaymentRequest request = PaymentRequest.builder()
+                    .amount(new BigDecimal("100.00"))
+                    .currency(CurrenciesEnum.EUR)
+                    .method(PaymentMethodsEnum.CREDIT_CARD)
+                    .build();
 
             Map<String, Object> details = new HashMap<>();
             details.put("cardNumber", cardNumber);
@@ -57,5 +58,59 @@ public class PaymentTestHelper {
     /** Creates a request with an invalid card number (fails Luhn check). */
     public static PaymentRequest createInvalidCardNumberRequest() {
         return createCreditCardRequest("1234567812345678", "123", "12/2026", "John Doe");
+    }
+
+    // Bitcoin payments
+    public static PaymentRequest createValidBitcoinRequest() {
+        return createCryptoRequest(
+                "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+                "BITCOIN",
+                new BigDecimal("50.00")
+        );
+    }
+
+    // Ethereum payments
+    public static PaymentRequest createValidEthereumRequest() {
+        return createCryptoRequest(
+                "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+                "ETHEREUM",
+                new BigDecimal("100.00")
+        );
+    }
+
+    // Generic crypto request
+    public static PaymentRequest createCryptoRequest(
+            String walletAddress,
+            String network,
+            BigDecimal amount
+    ) {
+        Map<String, Object> details = new HashMap<>();
+        details.put("walletAddress", walletAddress);
+        details.put("network", network);
+
+        return PaymentRequest.builder()
+                .amount(amount)
+                .currency(CurrenciesEnum.EUR)
+                .method(PaymentMethodsEnum.CRYPTO)
+                .paymentDetails(details)
+                .build();
+    }
+
+    // Below minimum amount
+    public static PaymentRequest createBelowMinimumCryptoRequest() {
+        return createCryptoRequest(
+                "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+                "BITCOIN",
+                new BigDecimal("9.99")
+        );
+    }
+
+    // Invalid wallet address
+    public static PaymentRequest createInvalidWalletRequest() {
+        return createCryptoRequest(
+                "INVALID_WALLET_123",
+                "BITCOIN",
+                new BigDecimal("50.00")
+        );
     }
 }

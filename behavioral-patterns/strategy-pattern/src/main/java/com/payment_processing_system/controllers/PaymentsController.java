@@ -1,5 +1,7 @@
 package com.payment_processing_system.controllers;
 
+import com.payment_processing_system.exceptions.PaymentValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.payment_processing_system.domains.PaymentRequest;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * REST controller for payment processing operations.
  */
+@Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/payments")
@@ -26,9 +29,16 @@ public class PaymentsController {
 
   /** Processes a payment using the specified payment method. */
   @PostMapping("/process")
-  public ResponseEntity<PaymentResponse> processPayment(
-    @Valid @RequestBody PaymentRequest request) {
-      PaymentResponse response = paymentService.processPayment(request);
-      return ResponseEntity.ok(response);
+  public ResponseEntity<PaymentResponse> processPayment(@Valid @RequestBody PaymentRequest request) {
+        log.info("Received payment request: method={}, amount={}",
+              request.getMethod(), request.getAmount());
+
+        try {
+            PaymentResponse response = paymentService.processPayment(request);
+            return ResponseEntity.ok(response);
+        } catch (PaymentValidationException e) {
+            log.warn("Payment validation failed: {}", e.getMessage());
+            throw e;
+        }
   }
 }

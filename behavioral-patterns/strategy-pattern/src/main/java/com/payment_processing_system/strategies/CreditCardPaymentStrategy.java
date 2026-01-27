@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import com.payment_processing_system.domains.PaymentRequest;
@@ -31,6 +32,7 @@ import lombok.AllArgsConstructor;
  * 
  * Fee: 2.9% + €0.30 per transaction
  */
+@Slf4j
 @Component
 @AllArgsConstructor
 public class CreditCardPaymentStrategy implements PaymentStrategy {
@@ -64,6 +66,7 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
 
     @Override
     public PaymentResponse process(PaymentRequest request) {
+        log.info("Processing credit card payment: amount={}", request.getAmount());
         Map<String, Object> details = request.getPaymentDetails();
         
         // Extract and validate
@@ -75,15 +78,8 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
         // Calculate fee
         BigDecimal fee = calculateFee(request.getAmount());
 
-        return PaymentResponse.builder()
-            .status(TransactionStatus.COMPLETED)
-            .transactionId(validator.generateTransactionId())
-            .netAmount(request.getAmount())
-            .fee(fee)
-            .grossAmount(request.getAmount().add(fee))
-            .method(PaymentMethodsEnum.CREDIT_CARD)
-            .timestamp(LocalDateTime.now())
-            .build();
+        log.info("Credit card payment completed successfully");
+        return buildPaymentResponse(request, fee);
     }
 
     @Override
@@ -198,5 +194,17 @@ public class CreditCardPaymentStrategy implements PaymentStrategy {
                 EXPIRY_DATE_INVALID_MSG, e
             );
         }
+    }
+
+    private PaymentResponse buildPaymentResponse(PaymentRequest request, BigDecimal fee) {
+        return PaymentResponse.builder()
+                .status(TransactionStatus.COMPLETED)
+                .transactionId(validator.generateTransactionId())
+                .netAmount(request.getAmount())
+                .fee(fee)
+                .grossAmount(request.getAmount().add(fee))
+                .method(PaymentMethodsEnum.CREDIT_CARD)
+                .timestamp(LocalDateTime.now())
+                .build();
     }
 }
