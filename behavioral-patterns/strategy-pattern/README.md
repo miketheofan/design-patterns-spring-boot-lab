@@ -24,15 +24,17 @@ Each payment method is implemented as a separate **Strategy** class that impleme
 
 ### Architecture
 
+```
 PaymentsController
-↓
+       ↓
 PaymentService (strategy selection via Map<PaymentMethod, PaymentStrategy>)
-↓
+       ↓
 PaymentStrategy (interface)
-├── CreditCardPaymentStrategy
-├── PayPalPaymentStrategy
-├── CryptoPaymentStrategy
-└── BankTransferPaymentStrategy
+       ├── CreditCardPaymentStrategy
+       ├── PayPalPaymentStrategy
+       ├── CryptoPaymentStrategy
+       └── BankTransferPaymentStrategy
+```
 
 **Key Benefit**: Adding a 5th payment method (e.g., Apple Pay) requires creating **1 new file** with **0 modifications** to existing code.
 
