@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.payment_processing_system.enums.PaymentMethodsEnum;
 import com.payment_processing_system.enums.TransactionStatus;
-import com.payment_processing_system.exceptions.PaymentValidationException;
 import com.payment_processing_system.utils.PaymentValidationHelper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +18,9 @@ import com.payment_processing_system.domains.PaymentResponse;
 /**
  * PayPal payment strategy implementation.
  * Handles validation, processing, and fee calculation for PayPal payments.
- *
  * Validation rules:
  * - Valid email format
  * - OAuth token present
- *
  * Fee: 3.4% + €0.35 per transaction
  */
 @Slf4j
@@ -35,11 +32,6 @@ public class PayPalPaymentStrategy implements PaymentStrategy {
 
     private static final String EMAIL_KEY = "email";
     private static final String TOKEN_KEY = "token";
-
-    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
-    private static final String WRONG_EMAIL_FORMAT_ERROR_MSG = "Email must be in format: smth@gmail.com";
-    private static final String TOKEN_PATTERN = "^Bearer [a-fA-F0-9]{10}$";
-    private static final String WRONG_TOKEN_FORMAT_ERROR_MSG = "Token must be in format: Bearer [10 tokens]";
 
     private static final String INSUFFICIENT_FUNDS_MSG = "Insufficient funds";
 
@@ -75,20 +67,8 @@ public class PayPalPaymentStrategy implements PaymentStrategy {
         String email = validator.getSpecificKey(details, EMAIL_KEY);
         String token = validator.getSpecificKey(details, TOKEN_KEY);
 
-        validateEmail(email);
-        validateToken(token);
-    }
-
-    private void validateEmail(String email) {
-        if (!email.matches(EMAIL_PATTERN)) {
-            throw new PaymentValidationException(WRONG_EMAIL_FORMAT_ERROR_MSG);
-        }
-    }
-
-    private void validateToken(String token) {
-        if (!token.matches(TOKEN_PATTERN)) {
-            throw  new PaymentValidationException(WRONG_TOKEN_FORMAT_ERROR_MSG);
-        }
+        validator.validateEmail(email);
+        validator.validateToken(token);
     }
 
     private PaymentResponse buildPaymentResponse(PaymentRequest request, BigDecimal fee) {

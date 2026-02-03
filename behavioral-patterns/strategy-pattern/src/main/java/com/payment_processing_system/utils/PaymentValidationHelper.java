@@ -14,10 +14,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class PaymentValidationHelper {
 
-    private final static String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-    private final static String EMAIL_VALIDATION_ERROR_MSG = "Invalid email format";
+    private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    private static final String WRONG_EMAIL_FORMAT_ERROR_MSG = "Email must be in format: smth@gmail.com";
 
-    private final static String TRANSACTION_ID_PREFIX = "TXN-";
+    private static final String TRANSACTION_ID_PREFIX = "TXN-";
+
+    private static final String TOKEN_PATTERN = "^Bearer [a-fA-F0-9]{10}$";
+    private static final String WRONG_TOKEN_FORMAT_ERROR_MSG = "Token must be in format: Bearer [10 tokens]";
 
     /**
      * Extracts a required string from payment details map.
@@ -47,7 +50,17 @@ public class PaymentValidationHelper {
      */
     public void validateEmail(String email) {
         if (!email.matches(EMAIL_PATTERN)) {
-            throw new PaymentValidationException(EMAIL_VALIDATION_ERROR_MSG);
+            throw new PaymentValidationException(WRONG_EMAIL_FORMAT_ERROR_MSG);
+        }
+    }
+
+    /**
+     * Validates email format.
+     * @throws PaymentValidationException if invalid email
+     */
+    public void validateToken(String token) {
+        if (!token.matches(TOKEN_PATTERN)) {
+            throw  new PaymentValidationException(WRONG_TOKEN_FORMAT_ERROR_MSG);
         }
     }
 
