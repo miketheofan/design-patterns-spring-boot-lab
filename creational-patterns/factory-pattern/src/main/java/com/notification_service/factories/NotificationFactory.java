@@ -1,6 +1,7 @@
 package com.notification_service.factories;
 
 import com.notification_service.enums.NotificationChannel;
+import com.notification_service.exceptions.UnsupportedChannelException;
 import com.notification_service.handlers.NotificationHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ public class NotificationFactory {
     public NotificationHandler createHandler(NotificationChannel channel) {
         NotificationHandler handler = handlers.get(channel);
         if (handler == null) {
-            throw new UnsupportedOperationException("Channel not supported: " + channel);
+            throw new UnsupportedChannelException("Channel not supported: " + channel);
         }
         return handler;
     }

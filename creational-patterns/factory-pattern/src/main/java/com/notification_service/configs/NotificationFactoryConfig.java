@@ -1,7 +1,7 @@
 package com.notification_service.configs;
 
 import com.notification_service.enums.NotificationChannel;
-import com.notification_service.handlers.NotificationHandler;
+import com.notification_service.handlers.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

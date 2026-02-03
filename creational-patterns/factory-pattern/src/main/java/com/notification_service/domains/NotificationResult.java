@@ -11,5 +11,5 @@ import java.time.LocalDateTime;
  */
 @Builder
 public record NotificationResult(String notificationId, NotificationStatus status, String channelUsed,
-                                 LocalDateTime sentAt, String providerReference, BigDecimal cost, String errorMessage) {
+                                 LocalDateTime sentAt, String providerReference, BigDecimal cost) {
 }
