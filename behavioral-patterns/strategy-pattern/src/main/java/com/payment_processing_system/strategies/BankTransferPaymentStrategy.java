@@ -32,7 +32,7 @@ import com.payment_processing_system.domains.PaymentResponse;
 public class BankTransferPaymentStrategy implements PaymentStrategy {
 
     private static final String IBAN_KEY = "iban";
-    private static final String BIC_CODE_KEY = "bic_code";
+    private static final String BIC_CODE_KEY = "bicCode";
     private static final String CARD_HOLDER_NAME_KEY = "card_holder_name";
 
     private static final String IBAN_PATTERN = "^GR\\d+$";

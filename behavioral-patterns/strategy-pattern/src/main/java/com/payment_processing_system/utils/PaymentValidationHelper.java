@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PaymentValidationHelper {
-
     private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
     private static final String WRONG_EMAIL_FORMAT_ERROR_MSG = "Email must be in format: smth@gmail.com";
 
