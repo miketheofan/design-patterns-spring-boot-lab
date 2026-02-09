@@ -1,3 +1,5 @@
 spring:
   application:
     name: number-guessing-game
+  profiles:
+    active: console

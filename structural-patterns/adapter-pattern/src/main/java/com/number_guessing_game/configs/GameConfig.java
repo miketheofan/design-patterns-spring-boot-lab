@@ -13,7 +13,7 @@ public class GameConfig {
         return new Random();
     }
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public Scanner scanner() {
         return new Scanner(System.in);
     }

@@ -1,8 +1,11 @@
 package com.number_guessing_game;
 
+import com.number_guessing_game.adapters.InputReader;
+import com.number_guessing_game.domains.GameSession;
+import com.number_guessing_game.enums.GuessResult;
 import com.number_guessing_game.exceptions.*;
 import com.number_guessing_game.services.GameService;
-import com.number_guessing_game.services.InputService;
+import com.number_guessing_game.services.MessageService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +17,8 @@ import java.util.Scanner;
 @AllArgsConstructor
 public class NumberGuessingGameApplication implements CommandLineRunner {
     private final GameService gameService;
-    private final InputService inputService;
+    private final MessageService messageService;
+    private final InputReader inputReader;
     private final GameExceptionHandler exceptionHandler;
     private final Scanner scanner;
 
@@ -25,21 +29,44 @@ public class NumberGuessingGameApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            gameService.startNewGame();
+            messageService.printWelcome(gameService.getMin(), gameService.getMax());
 
+            // Multi-game loop - each iteration is ONE complete game (one guess)
             while (true) {
-                try {
-                    int guess = inputService.readInteger();
-                    gameService.processGuess(guess);
+                // Create a NEW game for each guess
+                GameSession session = gameService.createNewGame();
 
-                    if (gameService.isGameOver(guess)) {
-                        break;
+                try {
+                    // Read user input
+                    int guess = inputReader.readInteger();
+
+                    // Validate range
+                    gameService.validateGuess(guess);
+
+                    // Process guess (one guess = one complete game)
+                    GuessResult result = session.processGuess(guess);
+
+                    // Display result
+                    if (result == GuessResult.WIN) {
+                        messageService.printWinMessage(session.getTargetNumber());
+                    } else {
+                        messageService.printLoseMessage(session.getTargetNumber(), guess);
                     }
+
+                    // TODO: Save session to CSV here
+                    // statisticsService.recordGame(session)
+
+                    messageService.printPlayAgain();
                 } catch (QuitGameException ex) {
                     exceptionHandler.handle(ex);
+
+                    // TODO: Display statistics here
+                    // statisticsService.displaySummary();
+
                     break;
                 } catch (GameException ex) {
                     exceptionHandler.handle(ex);
+                    // Exception doesn;t end the game loop, just retry
                 }
             }
         } finally {

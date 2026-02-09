@@ -1,48 +1,44 @@
 package com.number_guessing_game.services;
 
+import com.number_guessing_game.domains.GameSession;
 import com.number_guessing_game.exceptions.InputOutOfBoundsException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
 @Service
+@AllArgsConstructor
 public class GameService {
     private static final int MIN = 1;
     private static final int MAX = 10;
 
     private final Random random;
-    private final MessageService messageService;
 
-    private int targetNumber;
-    private int attempts;
-
-    public GameService(Random random, MessageService messageService) {
-        this.random = random;
-        this.messageService = messageService;
-    }
-
-    public void startNewGame() {
+    /** Creates a new game session with a random target number.
+     * Each call creates a NEW game.
+     */
+    public GameSession createNewGame() {
         // TODO: Encapsulate this functionality better
-        this.targetNumber = random.nextInt(MAX - MIN + 1) + MIN;
-
-        this.attempts = 0;
-        messageService.printWelcome(MIN, MAX);
+        int targetNumber = random.nextInt(MAX - MIN + 1) + MIN;
+        return new GameSession(MIN, MAX, targetNumber);
     }
 
-    public void processGuess(int guess) {
+    /**
+     * Validates that a guess is within the valid range.
+     * @throws InputOutOfBoundsException if invalid.
+     */
+    public void validateGuess(int guess) {
         if (guess > MAX || guess < MIN) {
             throw new InputOutOfBoundsException(MIN, MAX);
         }
     }
 
-    public boolean isGameOver(int guess) {
-        boolean playerWon = guess == targetNumber;
-        if (playerWon) {
-            messageService.printWinMessage(guess);
-        } else {
-            messageService.printLoseMessage(guess);
-        }
+    public int getMin() {
+        return MIN;
+    }
 
-        return playerWon;
+    public int getMax() {
+        return MAX;
     }
 }

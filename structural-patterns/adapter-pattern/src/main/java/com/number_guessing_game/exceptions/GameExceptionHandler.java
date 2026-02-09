@@ -1,13 +1,16 @@
 package com.number_guessing_game.exceptions;
 
-import lombok.extern.slf4j.Slf4j;
+import com.number_guessing_game.adapters.MessageDisplay;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
+@AllArgsConstructor
 public class GameExceptionHandler {
+    private final MessageDisplay display;
+
     public void handle(GameException ex) {
-        log.error(ex.getErrorMessage());
-        log.info(ex.getPromptMessage());
+        display.showError(ex.getMessage());
+        display.showInfo(ex.getPromptMessage());
     }
 }
