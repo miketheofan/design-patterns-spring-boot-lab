@@ -6,8 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Placeholder for manual Bean configurations used throughout the project
+ */
 @Configuration
-public class GameConfig {
+public class AppConfig {
     @Bean
     public Random random() {
         return new Random();

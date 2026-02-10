@@ -1,11 +1,13 @@
 package com.number_guessing_game;
 
 import com.number_guessing_game.adapters.InputReader;
+import com.number_guessing_game.domains.GameResults;
 import com.number_guessing_game.domains.GameSession;
 import com.number_guessing_game.enums.GuessResult;
 import com.number_guessing_game.exceptions.*;
 import com.number_guessing_game.services.GameService;
 import com.number_guessing_game.services.MessageService;
+import com.number_guessing_game.services.StatisticsService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +20,8 @@ import java.util.Scanner;
 public class NumberGuessingGameApplication implements CommandLineRunner {
     private final GameService gameService;
     private final MessageService messageService;
+    private final StatisticsService statisticsService;
+
     private final InputReader inputReader;
     private final GameExceptionHandler exceptionHandler;
     private final Scanner scanner;
@@ -53,8 +57,14 @@ public class NumberGuessingGameApplication implements CommandLineRunner {
                         messageService.printLoseMessage(session.getTargetNumber(), guess);
                     }
 
-                    // TODO: Save session to CSV here
-                    // statisticsService.recordGame(session)
+                    // Save session to CSV
+                    GameResults gameResults = GameResults.builder()
+                            .dateTime(session.getEndTime())
+                            .winner(session.getWinner())
+                            .winningNumber(session.getTargetNumber())
+                            .build();
+
+                    statisticsService.recordGame(gameResults);
 
                     messageService.printPlayAgain();
                 } catch (QuitGameException ex) {
@@ -66,7 +76,7 @@ public class NumberGuessingGameApplication implements CommandLineRunner {
                     break;
                 } catch (GameException ex) {
                     exceptionHandler.handle(ex);
-                    // Exception doesn;t end the game loop, just retry
+                    // Exception doesn't end the game loop, just retry
                 }
             }
         } finally {

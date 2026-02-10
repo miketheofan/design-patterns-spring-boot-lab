@@ -1,5 +1,6 @@
 package com.number_guessing_game.domains;
 
+import com.number_guessing_game.enums.Competitors;
 import com.number_guessing_game.enums.GuessResult;
 import lombok.Getter;
 
@@ -44,8 +45,8 @@ public class GameSession {
     /**
      * @return "USER" if user won, "COMPUTER" is user lost
      */
-    public String getWinner() {
-        return result == GuessResult.WIN ? "USER" : "COMPUTER";
+    public Competitors getWinner() {
+        return result == GuessResult.WIN ? Competitors.USER : Competitors.COMPUTER;
     }
 
     public boolean isGameComplete() {
