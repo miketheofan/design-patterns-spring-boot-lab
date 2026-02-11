@@ -14,10 +14,6 @@ import java.util.List;
  */
 @Service
 public class StatisticsService {
-
-    @Value("${game.statistics.file-path}")
-    private String statsFilePath;
-
     private final CsvWriter csvWriter;
 
     public StatisticsService(CsvWriter csvWriter) {
@@ -30,7 +26,7 @@ public class StatisticsService {
      * @param item the game result to record
      */
     public void recordGame(CsvWritable item) {
-        csvWriter.write(statsFilePath, item);
+        csvWriter.write(item);
     }
 
     /**
@@ -39,6 +35,6 @@ public class StatisticsService {
      * @param items the game results to record
      */
     public void recordGames(List<? extends CsvWritable> items) {
-        csvWriter.writeAll(statsFilePath, items);
+        csvWriter.writeAll(items);
     }
 }

@@ -2,6 +2,7 @@ package com.number_guessing_game.adapters;
 
 import com.number_guessing_game.domains.CsvWritable;
 import com.number_guessing_game.exceptions.CsvWriteException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -16,27 +17,29 @@ import java.util.List;
  * - Target Interface: CsvWriter
  * - Adaptee: FileWriter (Java I/O)
  * - Adapter: CsvFileAdapter (this class)
- *
  */
 @Component
-public class CsvFileAdapter implements CsvWriter {
+public class FileCsvWriterAdapter implements CsvWriter {
+    @Value("${game.statistics.file-path}")
+    private String statsFilePath;
+
     @Override
-    public void write(String filePath, CsvWritable item) {
-        writeAll(filePath, List.of(item));
+    public void write(CsvWritable item) {
+        writeAll(List.of(item));
     }
 
     @Override
-    public void writeAll(String filePath, List<? extends CsvWritable> items) {
+    public void writeAll(List<? extends CsvWritable> items) {
         if (items == null || items.isEmpty()) {
             return;
         }
 
-        File file = new File(filePath);
+        File file = new File(statsFilePath);
         createParentDirectories(file);
 
         boolean shouldWriteHeader = !file.exists() || file.length() == 0;
 
-        try (FileWriter writer = new FileWriter(filePath, true)) {
+        try (FileWriter writer = new FileWriter(statsFilePath, true)) {
             // Write header only for new/empty files
             if (shouldWriteHeader) {
                 String header = items.getFirst().csvHeader();
