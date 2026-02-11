@@ -3,6 +3,7 @@ package com.number_guessing_game;
 import com.number_guessing_game.adapters.InputReader;
 import com.number_guessing_game.domains.GameResults;
 import com.number_guessing_game.domains.GameSession;
+import com.number_guessing_game.domains.GameStatistics;
 import com.number_guessing_game.enums.GuessResult;
 import com.number_guessing_game.exceptions.*;
 import com.number_guessing_game.services.GameService;
@@ -70,8 +71,8 @@ public class NumberGuessingGameApplication implements CommandLineRunner {
                 } catch (QuitGameException ex) {
                     exceptionHandler.handle(ex);
 
-                    // TODO: Display statistics here
-                    // statisticsService.displaySummary();
+                    GameStatistics statistics = statisticsService.calculateStatistics();
+                    messageService.printStatistics(statistics);
 
                     break;
                 } catch (GameException ex) {

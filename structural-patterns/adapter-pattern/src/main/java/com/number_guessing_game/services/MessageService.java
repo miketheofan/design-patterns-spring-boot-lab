@@ -1,6 +1,7 @@
 package com.number_guessing_game.services;
 
 import com.number_guessing_game.adapters.MessageDisplay;
+import com.number_guessing_game.domains.GameStatistics;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +34,17 @@ public class MessageService {
 
     public void printPlayAgain() {
         display.showInfo(PLAY_AGAIN_MSG);
+    }
+
+    public void printStatistics(GameStatistics stats) {
+        display.showInfo("\n=== Game Statistics ===");
+        display.showInfo(String.format("Total Games: %d", stats.getTotalGames()));
+        display.showInfo(String.format("User Wins: %d", stats.getUserWins()));
+        display.showInfo(String.format("Computer Wins: %d", stats.getComputerWins()));
+        display.showInfo(String.format("Win Rate: %.2f%%", stats.getUserWinRate()));
+        display.showInfo(String.format("Most Common Winning Number: %d", stats.getMostCommonWinningNumber()));
+        display.showInfo(String.format("Time game started: %s", stats.getFirstGame()));
+        display.showInfo(String.format("Time game ended: %s", stats.getLastGame()));
+        display.showInfo("======================\n");
     }
 }

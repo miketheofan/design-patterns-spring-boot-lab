@@ -1,8 +1,12 @@
 package com.number_guessing_game.services;
 
+import com.number_guessing_game.adapters.CsvReader;
 import com.number_guessing_game.adapters.CsvWriter;
 import com.number_guessing_game.domains.CsvWritable;
-import org.springframework.beans.factory.annotation.Value;
+import com.number_guessing_game.domains.GameResults;
+import com.number_guessing_game.domains.GameStatistics;
+import com.number_guessing_game.utils.StatisticsCalculator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,12 +17,10 @@ import java.util.List;
  * Statistics file path is configured via application.yaml
  */
 @Service
+@AllArgsConstructor
 public class StatisticsService {
     private final CsvWriter csvWriter;
-
-    public StatisticsService(CsvWriter csvWriter) {
-        this.csvWriter = csvWriter;
-    }
+    private final CsvReader csvReader;
 
     /**
      * Records a single game result to the configured statistics file.
@@ -36,5 +38,10 @@ public class StatisticsService {
      */
     public void recordGames(List<? extends CsvWritable> items) {
         csvWriter.writeAll(items);
+    }
+
+    public GameStatistics calculateStatistics() {
+        List<GameResults> results = csvReader.readAll();
+        return StatisticsCalculator.calculate(results);
     }
 }

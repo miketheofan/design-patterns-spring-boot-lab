@@ -6,7 +6,7 @@ spring:
 
 game:
   statistics:
-    file-path: structural-patterns/adapter-pattern/src/main/resources/stats/stats.csv
+    directory: structural-patterns/adapter-pattern/src/main/resources/stats
   range:
     min: 1
     max: 3

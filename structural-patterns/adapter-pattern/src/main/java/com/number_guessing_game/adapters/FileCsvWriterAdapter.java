@@ -1,8 +1,9 @@
 package com.number_guessing_game.adapters;
 
+import com.number_guessing_game.configs.SessionFilePathProvider;
 import com.number_guessing_game.domains.CsvWritable;
 import com.number_guessing_game.exceptions.CsvWriteException;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -16,12 +17,12 @@ import java.util.List;
  * This is the ADAPTER in the Adapter Pattern:
  * - Target Interface: CsvWriter
  * - Adaptee: FileWriter (Java I/O)
- * - Adapter: CsvFileAdapter (this class)
+ * - Adapter: FileCsvReaderAdapter (this class)
  */
 @Component
+@AllArgsConstructor
 public class FileCsvWriterAdapter implements CsvWriter {
-    @Value("${game.statistics.file-path}")
-    private String statsFilePath;
+    private final SessionFilePathProvider pathProvider;
 
     @Override
     public void write(CsvWritable item) {
@@ -34,6 +35,7 @@ public class FileCsvWriterAdapter implements CsvWriter {
             return;
         }
 
+        String statsFilePath = pathProvider.getSessionFilePath();
         File file = new File(statsFilePath);
         createParentDirectories(file);
 
