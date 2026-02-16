@@ -179,17 +179,22 @@ public class PaymentServiceTest {
         @Test
         @DisplayName("should throw exception for unsupported payment method")
         void processPayment_unsupportedMethod_throwsException() {
-            // Arrange
-            PaymentRequest request = PaymentTestHelper.createValidCreditCardRequest();
-            request.setMethod(PaymentMethodsEnum.CRYPTO);
+            // Arrange - create a service with only 3 strategies (exclude CRYPTO)
+            Map<PaymentMethodsEnum, PaymentStrategy> limitedStrategyMap = new HashMap<>();
+            limitedStrategyMap.put(PaymentMethodsEnum.CREDIT_CARD, creditCardStrategy);
+            limitedStrategyMap.put(PaymentMethodsEnum.PAYPAL, paypalStrategy);
+            limitedStrategyMap.put(PaymentMethodsEnum.BANK_TRANSFER, bankTransferStrategy);
+
+            PaymentService limitedService = new PaymentService(limitedStrategyMap);
+            PaymentRequest request = PaymentTestHelper.createValidBitcoinRequest();
 
             // Act & Assert
-            assertThatThrownBy(() -> paymentService.processPayment(request))
+            assertThatThrownBy(() -> limitedService.processPayment(request))
                     .isInstanceOf(UnsupportedPaymentMethodException.class)
                     .hasMessageContaining("Cryptocurrency")
                     .hasMessageContaining("not currently supported");
 
-            verifyNoInteractions(creditCardStrategy, paypalStrategy);
+            verifyNoInteractions(creditCardStrategy, paypalStrategy, bankTransferStrategy);
         }
 
         @Test

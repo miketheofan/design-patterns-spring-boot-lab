@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("PayPalPaymentStrategy")
@@ -46,6 +45,8 @@ public class PayPalPaymentStrategyTest {
                         default -> "validValue";
                     };
                 });
+        lenient().doNothing().when(validator).validateEmail(anyString());
+        lenient().doNothing().when(validator).validateToken(anyString());
         lenient().doNothing().when(validator).simulateRandomFailure(anyDouble(), anyString());
         lenient().when(validator.generateTransactionId()).thenReturn(TRANSACTION_ID);
     }
@@ -101,6 +102,8 @@ public class PayPalPaymentStrategyTest {
 
             when(validator.getSpecificKey(any(), eq("email"))).thenReturn("invalid-email");
             when(validator.getSpecificKey(any(), eq("token"))).thenReturn("Bearer abc123def4");
+            doThrow(new PaymentValidationException("Email must be in format: smth@gmail.com"))
+                    .when(validator).validateEmail("invalid-email");
 
             // Act & Assert
             assertThatThrownBy(() -> strategy.process(request))
@@ -116,6 +119,9 @@ public class PayPalPaymentStrategyTest {
 
             when(validator.getSpecificKey(any(), eq("email"))).thenReturn("smth@gmail.com");
             when(validator.getSpecificKey(any(), eq("token"))).thenReturn("invalid-token");
+            lenient().doNothing().when(validator).validateEmail("smth@gmail.com");
+            doThrow(new PaymentValidationException("Token must be in format: Bearer [10 tokens]"))
+                    .when(validator).validateToken("invalid-token");
 
             // Act & Assert
             assertThatThrownBy(() -> strategy.process(request))

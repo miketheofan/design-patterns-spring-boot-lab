@@ -145,7 +145,8 @@ public class PaymentsControllerIT {
                       "method": "PAYPAL",
                       "paymentDetails": {
                           "email": "user@example.com",
-                          "payerId": "PAYERID123456"
+                          "payerId": "PAYERID123456",
+                          "token": "Bearer 1234567891"
                       }
                   }
                   """;
@@ -216,13 +217,13 @@ public class PaymentsControllerIT {
         void processPayment_validCrypto_returnsOk() throws Exception {
             String requestJson = """
                   {
-                      "amount": 0.05,
-                      "currency": "BTC",
+                      "amount": 50,
+                      "currency": "EUR",
                       "method": "CRYPTO",
                       "paymentDetails": {
                           "walletAddress": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
-                          "cryptoCurrency": "BTC",
-                          "network": "MAINNET"
+                          "cryptoCurrency": "EUR",
+                          "network": "BITCOIN"
                       }
                   }
                   """;
@@ -233,7 +234,7 @@ public class PaymentsControllerIT {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value("COMPLETED"))
                     .andExpect(jsonPath("$.method").value("CRYPTO"))
-                    .andExpect(jsonPath("$.netAmount").value(0.05))
+                    .andExpect(jsonPath("$.netAmount").value(50))
                     .andExpect(jsonPath("$.fee").exists())
                     .andExpect(jsonPath("$.grossAmount").exists())
                     .andExpect(jsonPath("$.transactionId").exists())
@@ -258,11 +259,11 @@ public class PaymentsControllerIT {
                     """
                     {
                         "amount": 0.01,
-                        "currency": "BTC",
+                        "currency": "EUR",
                         "method": "CRYPTO",
                         "paymentDetails": {
                             "walletAddress": "invalid-wallet",
-                            "cryptoCurrency": "BTC",
+                            "cryptoCurrency": "EUR",
                             "network": "MAINNET"
                         }
                     }
@@ -273,11 +274,11 @@ public class PaymentsControllerIT {
                     """
                     {
                         "amount": 100.00,
-                        "currency": "DOGE",
+                        "currency": "EUR",
                         "method": "CRYPTO",
                         "paymentDetails": {
                             "walletAddress": "DH5yaieqoZN36fDVciNyRueRGvGLR3mr7L",
-                            "cryptoCurrency": "DOGE",
+                            "cryptoCurrency": "EUR",
                             "network": "MAINNET"
                         }
                     }
@@ -300,9 +301,9 @@ public class PaymentsControllerIT {
                       "currency": "EUR",
                       "method": "BANK_TRANSFER",
                       "paymentDetails": {
-                          "iban": "DE89370400440532013000",
-                          "bic": "COBADEFFXXX",
-                          "accountHolderName": "John Doe"
+                          "iban": "GR89370400440532013000",
+                          "bic_code": "12345",
+                          "card_holder_name": "John Doe"
                       }
                   }
                   """;
@@ -342,8 +343,8 @@ public class PaymentsControllerIT {
                         "method": "BANK_TRANSFER",
                         "paymentDetails": {
                             "iban": "INVALID1234567890",
-                            "bic": "COBADEFFXXX",
-                            "accountHolderName": "Jane Smith"
+                            "bic_code": "COBADEFFXXX",
+                            "card_holder_name": "Jane Smith"
                         }
                     }
                     """
@@ -357,8 +358,8 @@ public class PaymentsControllerIT {
                         "method": "BANK_TRANSFER",
                         "paymentDetails": {
                             "iban": "DE89370400440532013000",
-                            "bic": "INVALID",
-                            "accountHolderName": "Bob Johnson"
+                            "bic_code": "INVALID",
+                            "card_holder_name": "Bob Johnson"
                         }
                     }
                     """
